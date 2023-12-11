@@ -6,7 +6,6 @@ use App\Models\Candidat;
 use App\Models\Releve;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class CandidatController extends Controller
@@ -24,9 +23,9 @@ class CandidatController extends Controller
 
     }
 
-    public function getCandidatsByExam($id){
+    public function getCandidats($id){
         return response()->json([
-            'candidats' => DB::table('candidats')->where('classe_id',$id)->orderBy('nom_candidat','ASC')->get()
+            'candidats' => DB::table('candidats')->where('classe_id',$id)->orderBy('prenom_candidat','ASC')->get()
         ]);
     }
 
@@ -50,7 +49,8 @@ class CandidatController extends Controller
     {
         $valid = Validator::make($request->all(), [
             'classe' => 'required',
-            'nom_candidat' => 'required|min:3'
+            'prenom_candidat' => 'required|min:2',
+            'nom_candidat' => 'required|min:2'
         ]);
         if($valid->fails()){
             return response()->json([
@@ -58,24 +58,16 @@ class CandidatController extends Controller
                 'errors' => $valid->messages(),
             ]);
         }else{
-            $maxId = Candidat::max('id');
-          
-            $reference = 0;
-            if(isset($maxId) && !is_null($maxId)){
-                $reference = $maxId + 1;
-            }else{
-                $reference = 1;
-            }
+            
             $c = new Candidat();
-            $c->reference_candidat = Hash::make($reference.'can');
+            $c->reference_candidat = uniqid();
+            $c->prenom_candidat = $request->input('prenom_candidat');
             $c->nom_candidat = $request->input('nom_candidat');
             $c->classe_id = $request->input('classe');   
             $c->save();
-            $der = Candidat::max('id');
-            $can = DB::table('candidats')->where('id',$der)->first();
             $rel = new Releve();
-            $rel->candidat_id = $der;
-            $rel->classe_id = $can->classe_id;
+            $rel->candidat_id = $c->id;
+            $rel->classe_id = $c->classe_id;
             $rel->save();
 
             return response()->json([
@@ -96,13 +88,13 @@ class CandidatController extends Controller
         $candidat = DB::table('candidats')
         ->join('classes','candidats.classe_id','=','classes.id')
         ->join('exams','classes.exam_id','=','exams.id')
-        ->where('candidats.id',$id)
+        ->where('candidats.reference_candidat',$id)
         ->select('classes.id as idClasse','classes.nom_classe','candidats.*','candidats.id as IdCandidat','exams.*')
         ->first();
 
         $idClasse = $candidat->classe_id;
         $matieres = DB::table('matieres')->where('classe_id', $idClasse)->get();
-        return view('examen.info', compact('candidat','matieres'));
+        return view('examen.candidats.info', compact('candidat','matieres'));
     }
 
     /**
@@ -131,8 +123,8 @@ class CandidatController extends Controller
     public function update(Request $request, $id)
     {
         $valider = Validator::make($request->all(), [
-            'nom_candidat'=>'required|max:50|min:3',
-            'classe' =>'required'
+            'prenom_candidat'=>'required|max:50|min:2',
+            'nom_candidat'=>'required|max:50|min:2',
         ]);
 
         if($valider->fails()){
@@ -142,8 +134,8 @@ class CandidatController extends Controller
             ]);
         }else{
             $c = Candidat::find($id);
+            $c->prenom_candidat = $request->input('prenom_candidat');
             $c->nom_candidat = $request->input('nom_candidat');
-            $c->classe_id = $request->input('classe');
             $c->update();
 
             return response()->json([

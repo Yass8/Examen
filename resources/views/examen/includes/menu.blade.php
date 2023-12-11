@@ -23,7 +23,7 @@
           </li>
         </ul>
         <div class="d-flex">
-          <input class="form-control me-2" type="texy" value="Yassir Ali" disabled>
+          <input class="form-control me-2" type="texy" value="" disabled>
           <a class="btn btn-outline-success" href="">Deconnexion</a>
         </div>
       </div>

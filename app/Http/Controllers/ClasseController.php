@@ -67,16 +67,9 @@ class ClasseController extends Controller
                 'errors' => $valid->messages(),
             ]);
         }else{
-            $maxId = Classe::max('id');
-            // dd($maxId);
-            $reference = 0;
-            if(isset($maxId) && !is_null($maxId)){
-                $reference = $maxId + 1;
-            }else{
-                $reference = 1;
-            }
+            
             $classe = new Classe();
-            $classe->reference_classe = Hash::make($reference.'Cl');
+            $classe->reference_classe = uniqid();
             $classe->nom_classe = $request->input('nom_classe');
             $classe->exam_id = $request->input('examen');   
             $classe->save();
@@ -95,6 +88,14 @@ class ClasseController extends Controller
      */
     public function show($id)
     {
+        $classe = DB::table('classes')->where('reference_classe',$id)->first();
+        $candidats = DB::table('candidats')->where('classe_id',$classe->id)->orderBy('prenom_candidat','ASC')->get();
+        
+        return view('examen.classes.showClasse', compact('classe','candidats'));
+
+    }
+
+    function reserv($id){
         $classe = DB::table('exams')
         ->join('classes','exams.id','=','classes.exam_id')
         ->where('classes.id',$id)
@@ -146,6 +147,7 @@ class ClasseController extends Controller
         }
 
         return view('examen.resultats', compact('listeAdmis','listeAuto','listeRefus','pourRefus','nombreCandidatRefus','pourAuto','nombreCandidatAuto','nombreCandidatAdmis','pourAdmis','classe','nombreCandidat','listes'));
+
     }
 
     /**

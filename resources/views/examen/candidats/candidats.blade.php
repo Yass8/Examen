@@ -129,7 +129,7 @@
                   </div>
               </div>
           </div>
-      </div>
+        </div>
         
       <!-- Modal Delete  -->
       <div class="modal fade" id="deleteCandidat" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -151,7 +151,7 @@
                 </div>
             </div>
         </div>
-    </div>
+      </div>
 
         <script>
             var modelId = document.getElementById('addCandidat');
@@ -378,40 +378,4 @@
         });
         });
     </script>
-@endsection
-@section('menu')
-<nav class="navbar navbar-expand-lg navbar-dark bg-info">
-    <div class="container-fluid">
-      <a class="navbar-brand text-danger" href="#" style="font-family: montserrat">Examen</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="{{route('dashboard')}}">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('examens.index')}}">Examens</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('classes.index')}}">Classes</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('matieres.index')}}">Matières</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="{{route('candidats.index')}}">Candidats</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('parametre')}}">Paramètres</a>
-          </li>
-        </ul>
-        <div class="d-flex">
-          <input class="form-control me-2" type="texy" value="Yassir Ali" disabled>
-          <a class="btn btn-outline-success" href="">Deconnexion</a>
-        </div>
-      </div>
-    </div>
-  </nav>
 @endsection

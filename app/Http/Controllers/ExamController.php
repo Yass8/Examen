@@ -19,7 +19,6 @@ class ExamController extends Controller
      */
     public function index()
     {
-        
 
         return view('examen.examens');
     }
@@ -61,19 +60,12 @@ class ExamController extends Controller
                 'errors'=>$validator->messages(),
             ]);
         } else {
-            $maxId = Exam::max('id');
-          
-            $reference = 0;
-            if(isset($maxId) && !isNull($maxId)){
-                $reference = $maxId + 1;
-            }else{
-                $reference = 1;
-            }
             
             $exam = new Exam();
-            $exam->reference_exam = Hash::make($reference.'Exa');
+            $exam->reference_exam = uniqid();
             $exam->nom_examen = $request->input('nom');
             $exam->save();
+
             return response()->json([
                 'status'=>200,
                 'message'=>'Examen ajouté avec succès !',
@@ -90,7 +82,12 @@ class ExamController extends Controller
      */
     public function show($id)
     {
-        //
+        $exam = DB::table('exams')->whereReferenceExam($id)->first();
+        $classes = DB::table('classes')
+        ->whereExamId($exam->id)->get();        
+        
+        return view('examen.showExam', compact('exam','classes'));
+
     }
 
     /**

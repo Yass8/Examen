@@ -37,7 +37,7 @@
                                 <option value="sel" class="btn_select">Selectionner une classe</option>
                                 @foreach ($classes as $classe)
                                       <option value="{{ $classe->id }}" class="btn_select">{{ $classe->nom_classe }}</option>
-                                  @endforeach
+                                @endforeach
                               </select>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                   </div>
               </div>
           </div>
-      </div>
+        </div>
         
       <!-- Modal Delete matiere -->
       <div class="modal fade" id="deleteMatiere" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -165,7 +165,7 @@
                 </div>
             </div>
         </div>
-    </div>
+      </div>
         <script>
             var modelId = document.getElementById('addMat');
         
@@ -380,7 +380,7 @@
                     listeMatieres();
                 }
             });
-        });
+    });
 
         
   });

@@ -42,7 +42,7 @@ class NoteController extends Controller
             'matiere' => 'required',
             'note' => 'required',
             'coefficient' => 'required',
-            'reference' => 'required'
+            'candidat_id' => 'required'
         ]);
         if($valid->fails()){
             return response()->json([
@@ -53,17 +53,17 @@ class NoteController extends Controller
             $n = new Note();
             $n->note = $request->input('note');
             $n->coef = $request->input('coefficient');
-            $n->candidat_id = $request->input('reference');   
+            $n->candidat_id = $request->input('candidat_id');   
             $n->matiere_id = $request->input('matiere');   
             $n->save();
-        $id_candidat = $request->input('candidat_id');
-            // updateMoyenne($id_candidat);
-        $notes = DB::table('notes')
-        ->join('matieres','matieres.id','=','notes.matiere_id')
-        ->where('notes.candidat_id',$id_candidat)
-        ->select('notes.*','notes.id as idNote','matieres.*')
-        ->orderBy('matieres.nom_matiere','ASC')
-        ->get();
+            $id_candidat = $request->input('candidat_id');
+                // updateMoyenne($id_candidat);
+            $notes = DB::table('notes')
+            ->join('matieres','matieres.id','=','notes.matiere_id')
+            ->where('notes.candidat_id',$id_candidat)
+            ->select('notes.*','notes.id as idNote','matieres.*')
+            ->orderBy('matieres.nom_matiere','ASC')
+            ->get();
         $s_notes = array();$s_coefs = array();
         foreach ($notes as $n) {
 
@@ -127,7 +127,6 @@ class NoteController extends Controller
         // dd($notes);
         $s_notes = array();$s_coefs = array();
         foreach ($notes as $n) {
-
             array_push($s_notes, $n->note*$n->coef);
             array_push($s_coefs, $n->coef);
         }

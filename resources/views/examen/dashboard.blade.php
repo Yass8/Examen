@@ -134,7 +134,7 @@
           </li>
         </ul>
         <div class="d-flex">
-          <input class="form-control me-2" type="texy" value="Yassir Ali" disabled>
+          <input class="form-control me-2" type="texy" value="" disabled>
           <a class="btn btn-outline-success" href="">Deconnexion</a>
         </div>
       </div>
@@ -142,65 +142,5 @@
 </nav>
 @endsection
 @section('2content')
-    <!-- /. ROW  --> 
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12"> 
-        <div class="cirStats">
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6"> 
-                            <div class="card-panel text-center">
-                                <h4 class="text-info">2 Examens Blanc</h4>
-                                {{-- <div class="easypiechart" id="easypiechart-blue" data-percent="82" ><span class="percent">82%</span>
-                                </div>  --}}
-                                <h5>- BEPC BLANC</h5>
-                                <h5>- BACCALAUREAT BLANC</h5>
-
-                            </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6"> 
-                            <div class="card-panel text-center">
-                                <h4 class="text-success">70 Candidats</h4>
-                                {{-- <div class="easypiechart" id="easypiechart-blue" data-percent="82" ><span class="percent">82%</span>
-                                </div>  --}}
-                                <h5> 40 candidats BEPC</h5>
-                                <h5> 30 candidats BACCALAUREAT</h5>
-                            </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6"> 
-                            <div class="card-panel text-center">
-                                <h4>BEPC</h4>
-                                <div class="easypiechart" id="easypiechart-teal" data-percent="84" ><span class="percent">84%</span>
-                                </div> 
-                                <h5> 30 admis | 2 refusés</h5>
-                                <a href="">Liste</a>
-                            </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6"> 
-                            <div class="card-panel text-center">
-                                <h4>Sales</h4>
-                                <div class="easypiechart" id="easypiechart-orange" data-percent="55" ><span class="percent">55%</span>
-                                </div>
-                                <h5> 10 admis | 5 refusés</h5>
-                                <a href="">Liste</a>
-                            </div>
-                    </div>  
-                </div>
-            </div>							
-            </div><!--/.row-->
-            {{-- <div class="col-xs-12 col-sm-12 col-md-5"> 
-                 <div class="row">
-                        <div class="col-xs-12"> 
-                        <div class="card">
-                            <div class="card-image donutpad">
-                              <div id="morris-donut-chart"></div>
-                              3 Utilisateurs
-                            </div> 
-                            <div class="card-action">
-                              <b>Donut Chart Example</b>
-                            </div>
-                        </div>	
-                    </div>
-                 </div>
-            </div><!--/.row--> --}}
-        </div>
+    
 @endsection

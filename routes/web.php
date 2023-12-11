@@ -35,7 +35,7 @@ Route::get('/dashboardl', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboardl');
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
 
 Route::resource('/examens',ExamController::class);
 Route::get('/examList',[ExamController::class, 'liste'])->name('exam');
@@ -44,7 +44,7 @@ Route::resource('/matieres',MatiereController::class);
 Route::get('/getMatieresByExam/{id}', [MatiereController::class, 'getMatieresByExam']);
 
 Route::resource('/candidats',CandidatController::class);
-Route::get('/getCandidatsByExam/{id}', [CandidatController::class, 'getCandidatsByExam']);
+Route::get('/getCandidats/{id}', [CandidatController::class, 'getCandidats']);
 
 Route::resource('/classes',ClasseController::class);
 Route::get('/classeList', [ClasseController::class, 'classeList']);

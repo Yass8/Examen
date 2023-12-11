@@ -14,9 +14,13 @@
                     <div class="card-body">
                       <table class="table">
                           <tr>
-                              <td>Candidat(e)</td>
-                              <td>: <span class=""><b>{{$candidat->nom_candidat}}</b></span></td>
+                              <td>Prénom</td>
+                              <td>: <span class=""><b>{{$candidat->prenom_candidat}}</b></span></td>
                           </tr>
+                          <tr>
+                            <td>Nom</td>
+                            <td>: <span class=""><b>{{$candidat->nom_candidat}}</b></span></td>
+                        </tr>
                           <tr>
                             <td>Examen</td>
                             <td>: <span class=""><b>{{$candidat->nom_examen}}</b></span></td>
@@ -84,9 +88,40 @@
                       Ajouter une note
                     </div>
                     <div class="card-body">
-                        <p>Candidat : <b>{{$candidat->nom_candidat}}</b></p>
+                        {{-- <p>Candidat : <b>{{$candidat->nom_candidat}}</b></p> --}}
                         <ul id="errorList"></ul>
-                        <input type="hidden" class="ref" value="{{$candidat->IdCandidat}}">
+
+                        <div
+                            class="table-responsive"
+                        >
+                            <table
+                                class="table table-striped table-bordered"
+                            >
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Matières</th>
+                                        <th scope="col">Cf</th>
+                                        <th scope="col">Notes</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @php $i = 0; @endphp
+                                @foreach ($matieres as $m)
+                                @php $i++; @endphp
+                                    <tr class="">
+                                        <td>{{$m->nom_matiere}}</td>
+                                        <td>{{$m->coef}}</td>
+                                        <td><input type="number" id="noteMatiere{{$i}}" min="1" style="width: 50px"></td>
+                                        <td><button type="button" data-indice="{{$i}}" data-matiere="{{$m->id}}" data-coef="{{$m->coef}}" class="btnAjout btn btn-outline-primary btn-sm"><img src="{{asset("bootstrap-icons-1.8.1/plus-lg.svg")}}" alt=""></button></td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        
+
+                        {{-- <input type="hidden" class="ref" value="{{$candidat->IdCandidat}}">
                         <label for="selectMatiere">Sélectionner la matière</label>
                         <select name="selectMatiere" class="form-control mb-3" id="selectMatiere">
                             @foreach ($matieres as $m)
@@ -94,16 +129,16 @@
                             @endforeach
                         </select>
                         <div class="form-floating mb-3">
-                            <input type="number" min="0" class="laNote form-control" id="laNote" placeholder="nom">
+                            <input type="number" min="0" class="laNot form-control" id="laNote" placeholder="nom">
                             <label for="laNote">Note</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="number" min="0" class="leCoef form-control" id="leCoef" placeholder="nom">
+                            <input type="number" min="0" class="leCoe form-control" id="leCoef" placeholder="nom">
                             <label for="leCoef">Coefficient</label>
                         </div>
                         <div class="text-center">
-                            <button class="btnAjout btn btn-info btn-sm">Ajouter</button>
-                        </div>
+                            <button class="btnAjou btn btn-info btn-sm">Ajouter</button>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -252,7 +287,6 @@
 <script>
     $(document).ready(function(){
 
-
     //show modal to delete
     $(document).on('click', '.BDelete', function(e){
         e.preventDefault();
@@ -265,12 +299,6 @@
     //delete 
     $(document).on('click', '.btn_sup_note', function(e){
             e.preventDefault();
-
-            // var nt_id = $('#delete_note_id').val();
-            // var data = { 
-            //     'note_id': $('#delete_note_id').val(),
-            //     'candidat_id' : $('#CANDIDAT_ID').val(),
-            // };
 
             var note_id = $('#delete_note_id').val();
             var candidat_id = $('#CANDIDAT_ID').val();
@@ -374,10 +402,10 @@
     //Liste des notes
     listeNotes();
     function listeNotes(){
-        var ref = $('.ref').val();
+        var id = $('#CANDIDAT_ID').val();
         $.ajax({
                 type: "GET",
-                url: "/notes/"+ref,
+                url: "/notes/"+id,
                 dataType: "json",
                 success: function (response) {
                     
@@ -418,51 +446,57 @@
     //Ajout une note
     $(document).on('click','.btnAjout', function(e){
         e.preventDefault();
-        // console.log($('.laNote').val());
-        // console.log($('.leCoef').val());
-        // console.log($('#selectMatiere').val());
-        var data = {
-            'matiere' : $('#selectMatiere').val(),
-            'note' : $('.laNote').val(),
-            'coefficient' : $('.leCoef').val(),
-            'reference' : $('.ref').val(),
-            'candidat_id' : $('#CANDIDAT_ID').val(),
-        };
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+        let matiere = parseInt($(this).data('matiere'));
+        let coef = parseInt($(this).data('coef'));
+        let indice = $(this).data('indice');
+        let note = 0;
 
-        $.ajax({
-            type: "POST",
-            url: "/notes",
-            data: data,
-            dataType: "json",
-            success: function(response) {
-                
-                if(response.status == 400)
-                {
-                    $('#errorList').html("");
-                    $('#errorList').addClass('alert alert-danger');
-
-                    $.each(response.errors, function(key, err_values) {
-                        $('#errorList').append('<li>'+err_values+'</li>');
-                    });
+        if ($("#noteMatiere"+indice).val() == "" ) {
+            $('#errorList').html('<li>La note est obligatoire !</li>');
+            $('#errorList').addClass('alert alert-danger');
+        } else {
+            note = parseFloat($("#noteMatiere"+indice).val());
+            var data = {
+                'matiere' : matiere,
+                'note' : note,
+                'coefficient' : coef,
+                'candidat_id' : $('#CANDIDAT_ID').val(),
+            };
+            // console.log(data);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-                else
-                {
-                    $('#errorList').html("");
-                    $('#success_message').addClass('alert alert-success');
-                    $('#success_message').text(response.message);
-                    // $('#addCandidat').modal('hide');
-                    // $('#addCandidat').find('input').val("");
-                    listeNotes();
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/notes",
+                data: data,
+                dataType: "json",
+                success: function(response) {
+                    
+                    if(response.status == 400)
+                    {
+                        $('#errorList').html("");
+                        $('#errorList').addClass('alert alert-danger');
+
+                        $.each(response.errors, function(key, err_values) {
+                            $('#errorList').append('<li>'+err_values+'</li>');
+                        });
+                    }
+                    else
+                    {
+                        $('#errorList').html("");
+                        $('#success_message').addClass('alert alert-success');
+                        $('#success_message').text(response.message);
+                        // $('#addCandidat').modal('hide');
+                        // $('#addCandidat').find('input').val("");
+                        listeNotes();
+                    }
                 }
-            }
-        });
-
-
+            });
+        }
     });
 
     
@@ -496,43 +530,4 @@
 
 
 </script>
-@endsection
-@section('menu')
-<nav class="navbar navbar-expand-lg navbar-dark bg-info">
-    <div class="container-fluid">
-      <a class="navbar-brand text-danger" href="#" style="font-family: montserrat">Examen</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="{{route('dashboard')}}">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('examens.index')}}">Examens</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('classes.index')}}">Classes</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('matieres.index')}}">Matières</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="{{route('candidats.index')}}">Candidats</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('parametre')}}">Paramètres</a>
-          </li>
-        </ul>
-        <div class="d-flex">
-          <input class="form-control me-2" type="texy" value="Yassir Ali" disabled>
-          <form action="{{route('logout')}}" method="post">
-           @csrf
-          <button type="submit" class="btn btn-outline-success">Deconnexion</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </nav>
 @endsection

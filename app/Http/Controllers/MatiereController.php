@@ -55,6 +55,7 @@ class MatiereController extends Controller
     {
         $valid = Validator::make($request->all(), [
             'classe' => 'required',
+            'coef' => 'required',
             'nom_matiere' => 'required|min:3'
         ]);
         if($valid->fails()){
@@ -63,17 +64,11 @@ class MatiereController extends Controller
                 'erreurs' => $valid->messages(),
             ]);
         }else{
-            $maxId = Exam::max('id');
-          
-            $reference = 0;
-            if(isset($maxId) && !is_null($maxId)){
-                $reference = $maxId + 1;
-            }else{
-                $reference = 1;
-            }
+            
             $matiere = new Matiere();
-            $matiere->reference_matiere = Hash::make($reference.'mate');
+            $matiere->reference_matiere = uniqid();
             $matiere->nom_matiere = $request->input('nom_matiere');
+            $matiere->coef = $request->input('coef');
             $matiere->classe_id = $request->input('classe');   
             $matiere->save();
             return response()->json([
@@ -121,7 +116,7 @@ class MatiereController extends Controller
     {
         $valider = Validator::make($request->all(), [
             'nom_matiere'=>'required|max:50|min:3',
-            'classe' =>'required'
+            'coef' =>'required'
         ]);
 
         if($valider->fails()){
@@ -132,7 +127,7 @@ class MatiereController extends Controller
         }else{
             $m = Matiere::find($id);
             $m->nom_matiere = $request->input('nom_matiere');
-            $m->classe_id = $request->input('classe');
+            $m->coef = $request->input('coef');
             $m->update();
 
             return response()->json([

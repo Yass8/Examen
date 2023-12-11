@@ -164,15 +164,16 @@
                         $('tbody').append('<tr>\
                             <td>'+i+'</td>\
                             <td>'+item.nom_examen+'</td>\
-                            <td><button type="button" value="'+item.id+'" class="delete_btn btn btn-danger btn-sm">Supprimer</button> | \
-                                <button type="button" value="'+item.id+'" class="edit_btn btn btn-warning btn-sm">Modifier</button></td>\
+                            <td><a href="/examens/'+item.reference_exam+'" class="acces btn btn-primary btn-sm">Acceder</a></td>\
                         </tr>');
                     }); 
                 }
             });
-        }
+        }   
+        /*<td><button type="button" value="'+item.id+'" class="delete_btn btn btn-danger btn-sm">Supprimer</button> | \
+                                <button type="button" value="'+item.id+'" class="edit_btn btn btn-warning btn-sm">Modifier</button></td>\*/
             //show modal to edit
-            $(document).on('click', '.edit_btn', function(e){
+            /*$(document).on('click', '.edit_btn', function(e){
                 e.preventDefault();
                 var exm_id = $(this).val();
                 $('#errorListEdit').html("");
@@ -193,7 +194,9 @@
                     }
                 });
                 
-            });
+            });*/
+
+
             //update 
             $(document).on('click', '.btn_edit_exam', function(e){
                 e.preventDefault();
